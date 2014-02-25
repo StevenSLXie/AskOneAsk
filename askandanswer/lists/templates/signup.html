@@ -1,0 +1,15 @@
+<html>
+	<head>
+		<title>User Registration</title>
+	</head>
+	<body>
+		<h1>Creating your account</h1>
+		<form method='POST'>
+			<p>Username:<input name='username' id='id_new_username'/></p>
+			<p>Password:<input type='password' name='password' id='id_new_password'/></p>
+			<p>Email:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name='email',id='id_new_email'></p>
+			<p> <input type='submit' id='id_submit' name ='Submit' value='Submit'/>
+			    <input type='submit' id='id_I_have_an_account' name='i_have_an_account' value='I Have An Account'> </p>
+			{% csrf_token %}
+	</body>
+</html>

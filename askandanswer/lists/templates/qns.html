@@ -1,0 +1,12 @@
+<html>
+	<head>
+		<title>Ask and Answer</title>
+	</head>
+	<body>
+		<h1>{{Question}}</h1>
+		<form method='POST'>
+			<input name='ans_text' id='id_new_ans' placeholder='Enter your answer:' />
+			{% csrf_token %}
+		<p>Question asked by {{Author}}</p>
+	</body>
+</html>
