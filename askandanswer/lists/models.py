@@ -13,4 +13,10 @@ class Qns(models.Model):
     author = models.ForeignKey(User,null=True,blank=True)
     answerSet = models.ManyToManyField(Ans)
 
+    def getAnswer(self):
+		#return ' '.join([p.answer for p in self.answerSet.all()])
+		#return self.answerSet.all()[0].answer
+		return self.answerSet
+	# def viewMyAns(self):
+	#    return '\n'.join([ p.answer for p in self.answerSet.all()])
 

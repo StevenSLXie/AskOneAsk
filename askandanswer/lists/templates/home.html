@@ -1,11 +1,31 @@
+<!DOCTYPE html>
 <html>
-	<head>
-		<title>Ask and Answer</title>
-	</head>
 	<body>
-		<h1>Ask A Question</h1>
-		<form method='POST'>
-			<input name='qns_text' id='id_new_qns' placeholder='Enter your question:' />
-			{% csrf_token %}
-	</body>
+	<!--
+	<p><a href="/ask">I want to ask questions!</a></p>
+	<p><a href='/myanswer'>I want to view other people's response to my question!</a></p>
+	-->
+	<button onclick = 'funcAsk()'>Ask Question!</button>
+	<button onclick = 'funcAnswer()'>Answer Question!</button>
+	<button onclick = 'funcViewQns()'>View My Question!</button>
+	<button onclick = 'funcViewAns()'>View My Answer!</button>
+
+
+	<script>
+	function funcAsk(){
+		window.open('/ask','_self')
+	}
+	function funcAnswer(){
+		window.open('/answer','_self')
+	}
+	function funcViewQns(){
+		window.open('/myqns','_self')
+	}
+	function funcViewAns(){
+		window.open('/myans','_self')
+	
+	}
+	</script>
+
+</body>
 </html>

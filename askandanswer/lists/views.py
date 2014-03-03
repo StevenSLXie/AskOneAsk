@@ -24,23 +24,26 @@ def login(request):
         return redirect('/')
 '''
 def new_ask(request):
-    if request.method == 'POST':
-        Qns.objects.create(qns=request.POST['qns_text'],author=request.user)
-        return redirect('/answer')
-    else:
-        return render(request,'home.html')
+	render(request,'ask.html')
 
+	if request.method == 'POST':
+	    Qns.objects.create(qns=request.POST['qns_text'],author=request.user)
+	    return redirect('/answer')
+	else:
+		#return render(request,'home.html')
+		return render(request,'ask.html')
 def new_answer(request):
     num = Qns.objects.count()
     sampleNum = randint(1,num)
     sample = Qns.objects.get(id=sampleNum)
     para = {'Question':sample.qns,'Author':sample.author}
-    render(request,'qns.html',para)
+    render(request,'answer.html',para)
     if request.method == 'POST':
         sample.answerSet.add(Ans.objects.create(answer=request.POST['ans_text'],person=request.user))        
         return redirect('/ask')
     else:
-        return render(request,'qns.html',para)
+        return render(request,'answer.html',para)
+
 
 def signup(request):
     if request.method == 'POST':
@@ -50,7 +53,15 @@ def signup(request):
     else:
         return render(request,'signup.html')
 
-def print_answers(request):
+def print_qns_by_asker(request):
     table = QnsTable(Qns.objects.filter(author=request.user))
     RequestConfig(request).configure(table)
     return render(request, 'print_answer.html', {'table': table})
+
+def print_answer_by_answerer(request):
+    table = QnsTable(Qns.objects.filter(author=request.user))
+    RequestConfig(request).configure(table)
+    return render(request,'print_answer.html',{'table':table})
+
+def home(request):
+    return render(request,'home.html')

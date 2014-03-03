@@ -1,0 +1,12 @@
+<html>
+	<head>
+		<title>Ask and Answer</title>
+	</head>
+	<body>
+		<h1>Let's ask a question.</h1>
+		<form method='POST'>
+			<input name='qns_text' id='id_new_qns' placeholder='Enter your question:' />
+			{% csrf_token %}
+			<input type="submit" value="Submit" />
+	</body>
+</html>
