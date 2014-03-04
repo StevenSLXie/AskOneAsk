@@ -5,9 +5,12 @@ from random import randint
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django_tables2 import RequestConfig
-from lists.tables import QnsTable
+from lists.tables import QnsTable,AnsTable
 
 # Create your views here.
+
+flag = False
+sampleNum = 1
 
 '''
 def login(request):
@@ -24,23 +27,33 @@ def login(request):
         return redirect('/')
 '''
 def new_ask(request):
-	render(request,'ask.html')
+    render(request,'ask.html')
+    if request.POST.get('qns_text'):
+        if request.POST['qns_text'] != '':
+            Qns.objects.create(qns=request.POST['qns_text'],author=request.user)
+        return redirect('/answer')
+    elif request.POST.get('backToMenu'):
+        return render(request,'home.html')
+    else:
+        return render(request,'ask.html')
 
-	if request.method == 'POST':
-	    Qns.objects.create(qns=request.POST['qns_text'],author=request.user)
-	    return redirect('/answer')
-	else:
-		#return render(request,'home.html')
-		return render(request,'ask.html')
 def new_answer(request):
     num = Qns.objects.count()
-    sampleNum = randint(1,num)
+	#flag = False
+    global flag
+    global sampleNum
+    if not flag:
+        sampleNum = randint(1,num)
+        flag = True
     sample = Qns.objects.get(id=sampleNum)
     para = {'Question':sample.qns,'Author':sample.author}
-    render(request,'answer.html',para)
-    if request.method == 'POST':
-        sample.answerSet.add(Ans.objects.create(answer=request.POST['ans_text'],person=request.user))        
+    if request.POST.get('ans_text'):
+        if request.POST['ans_text'] != '':
+            Ans.objects.create(answer=request.POST['ans_text'],person=request.user,qns=sample)
+        flag = False
         return redirect('/ask')
+    elif request.POST.get('backToMenu'):
+        return render(request,'home.html')
     else:
         return render(request,'answer.html',para)
 
@@ -54,12 +67,12 @@ def signup(request):
         return render(request,'signup.html')
 
 def print_qns_by_asker(request):
-    table = QnsTable(Qns.objects.filter(author=request.user))
+    table = QnsTable(Ans.objects.filter(qns__author=request.user))
     RequestConfig(request).configure(table)
     return render(request, 'print_answer.html', {'table': table})
 
 def print_answer_by_answerer(request):
-    table = QnsTable(Qns.objects.filter(author=request.user))
+    table = AnsTable(Ans.objects.filter(person=request.user))
     RequestConfig(request).configure(table)
     return render(request,'print_answer.html',{'table':table})
 
