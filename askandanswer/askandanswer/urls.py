@@ -11,7 +11,8 @@ urlpatterns = patterns('',
 	url(r'^ask','lists.views.new_ask',name='new ask'),
 	url(r'^answer','lists.views.new_answer',name='new answer'),
 	url(r'^myqns','lists.views.print_qns_by_asker',name = 'view my qns'),
-	url(r'^myans','lists.views.print_answer_by_answerer',name = 'view my answer')
+	url(r'^myans','lists.views.print_answer_by_answerer',name = 'view my answer'),
+	url(r'^people','lists.views.people_detail',name='people_detail'),
     # url(r'^blog/', include('blog.urls')),
 
 	#url(r'^admin/', include(admin.site.urls)),

@@ -33,7 +33,7 @@ def new_ask(request):
             Qns.objects.create(qns=request.POST['qns_text'],author=request.user)
         return redirect('/answer')
     elif request.POST.get('backToMenu'):
-        return render(request,'home.html')
+        return redirect('/')
     else:
         return render(request,'ask.html')
 
@@ -53,7 +53,7 @@ def new_answer(request):
         flag = False
         return redirect('/ask')
     elif request.POST.get('backToMenu'):
-        return render(request,'home.html')
+        return redirect('/')
     else:
         return render(request,'answer.html',para)
 
@@ -78,3 +78,6 @@ def print_answer_by_answerer(request):
 
 def home(request):
     return render(request,'home.html')
+
+def people_detail(request):
+    return redirect('/')

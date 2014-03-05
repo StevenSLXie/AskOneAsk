@@ -6,6 +6,7 @@
 		<h1>{{Question}}</h1>
 		<form method='POST'>
 			<input name='ans_text' id='id_new_ans' placeholder='Enter your answer:' />
+			<input type="submit" value="Submit" />
 			{% csrf_token %}
 		<p>Question asked by {{Author}}</p>
 		<p><input type="submit" value="Back To Menu" name="backToMenu" /></p>
