@@ -2,30 +2,34 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from lists.models import Qns,Ans
 from random import randint
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
 from django.contrib.auth.models import User
 from django_tables2 import RequestConfig
-from lists.tables import QnsTable,AnsTable
+from lists.tables import QnsTable,AnsTable,UserTable
 
 # Create your views here.
 
 flag = False
 sampleNum = 1
 
-'''
+
 def login(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(username=username,password=password)
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username,password=password)
+    else:
+        return render(request,'login.html')
     if user is not None:
         if user.is_active:
-            login(request,user)
-            return render(request,'home.html')
-        else:
+            auth_login(request,user)
             return redirect('/')
+        else:
+            return redirect('/login')
     else:
-        return redirect('/')
-'''
+        return redirect('/login')
+
 def new_ask(request):
     render(request,'ask.html')
     if request.POST.get('qns_text'):
@@ -60,8 +64,14 @@ def new_answer(request):
 
 def signup(request):
     if request.method == 'POST':
-        if 'i_have_an_account' not in request.POST:	
-            User.objects.create_user(request.POST['username'],request.POST['email'],request.POST['password'])
+        if 'i_have_an_account' in request.POST:
+            return redirect('/login')
+        elif (not request.POST['username']) or (not request.POST['password']) or (not request.POST['password2']) or (not request.POST['email']):
+            return render(request,'signup.html')
+        elif request.POST['password'] != request.POST['password2']:
+            return render(request,'signup.html')
+		#if 'i_have_an_account' not in request.POST:	
+        User.objects.create_user(request.POST['username'],request.POST['email'],request.POST['password'])
         return redirect('/login')
     else:
         return render(request,'signup.html')
@@ -79,5 +89,8 @@ def print_answer_by_answerer(request):
 def home(request):
     return render(request,'home.html')
 
-def people_detail(request):
-    return redirect('/')
+def people_detail(request,user):
+    table = UserTable(User.objects.filter(username=user))
+    RequestConfig(request).configure(table)
+    return render(request,'print_answer.html',{'table':table})
+	#return redirect('/')
