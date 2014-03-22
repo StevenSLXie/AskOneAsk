@@ -1,6 +1,6 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,render_to_response
 from django.http import HttpResponse
-from lists.models import Qns,Ans
+from lists.models import Qns,Ans,Person
 from random import randint
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
@@ -72,9 +72,24 @@ def signup(request):
             return render(request,'signup.html')
 		#if 'i_have_an_account' not in request.POST:	
         User.objects.create_user(request.POST['username'],request.POST['email'],request.POST['password'])
-        return redirect('/login')
+        return redirect('/more')
     else:
         return render(request,'signup.html')
+
+def user_info_input(request):
+    if request.method == 'POST':
+        if request.POST.get('later'):
+            return redirect('/login')
+        else:
+            request.user.city = request.POST['city']
+            if request.POST.get('status',True):
+                request.user.status = True
+            else:
+                request.user.status = False
+            return redirect('/login')
+    else:
+	    return render(request,'user_information_input.html')
+        
 
 def print_qns_by_asker(request):
     table = QnsTable(Ans.objects.filter(qns__author=request.user))
@@ -89,8 +104,8 @@ def print_answer_by_answerer(request):
 def home(request):
     return render(request,'home.html')
 
-def people_detail(request,user):
+def print_people_detail(request,user):
     table = UserTable(User.objects.filter(username=user))
     RequestConfig(request).configure(table)
-    return render(request,'print_answer.html',{'table':table})
-	#return redirect('/')
+    return render(request,'user_profile.html',{'table':table})
+	#return redirect('/ask')

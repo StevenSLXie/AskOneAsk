@@ -1,6 +1,6 @@
 # askandanswer/tables.py
 import django_tables2 as tables
-from lists.models import Qns,Ans
+from lists.models import Qns,Ans,Person
 #from lists.views import people_detail
 from django_tables2.utils import A
 from django.contrib.auth.models import User
@@ -38,6 +38,6 @@ class AnsTable(tables.Table):
 # the table display the user info.
 class UserTable(tables.Table):
     class Meta:
-        model = User
-	#  fields = ('get_username',)
+        model = Person 
+        fields = ('get_username','email','city','status')
         attrs = {'class':'paleblue'}

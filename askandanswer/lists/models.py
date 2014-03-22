@@ -3,18 +3,21 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+class Person(models.Model):
+    username = models.TextField()
+    email = models.TextField()
+    city = models.TextField()
+    status = models.BooleanField()
+    def __init__(self,user=None):
+        if user == None:
+            super(Person,self).__init__()
+        else:
+            self.username = user.username
+            self.email = user.email
 
 class Qns(models.Model):
     qns = models.TextField() 
     author = models.ForeignKey(User,null=True,blank=True)
-	#answerSet = models.ManyToManyField(Ans)
-
-	#def getAnswer(self):
-		#return ' '.join([p.answer for p in self.answerSet.all()])
-		#return self.answerSet.all()[0].answer
-	#	return self.answerSet
-	# def viewMyAns(self):
-	#    return '\n'.join([ p.answer for p in self.answerSet.all()])
 
 class Ans(models.Model):
     answer = models.TextField()
@@ -25,6 +28,8 @@ class Ans(models.Model):
         return self.qns.qns
     def askedByWhom(self):
         return self.qns.author
+
+
 
 
 
