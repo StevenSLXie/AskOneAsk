@@ -1,43 +1,28 @@
-{# lists/templates/user_information_input.html #}
-{% load render_table from django_tables2 %}
-<!doctype html>
-<html>
-    <head>
-		<meta charset=utf-8' />
-		<meta http-equiv='X-UA-Compatible' content='IE=edge'>
-		<meta name='viewport' content='width=device-width, initial-scale=1'>
-		<meta name='description' content=''>
-		<meta name='author' content=''>
-		<title>Ask Me - Create your dating profile and meet THE ONE by asking and answering questions</title>
+{%extends 'base.html'%}
 
-		<link rel='shortcut icon' href='../../assets/ico/favicon.ico'>
-		<link href='static/bootstrap/css/bootstrap.min.css' rel='stylesheet'>
-		<link href='static/bootstrap/css/bootstrap-theme.min.css' rel='stylesheet'>
-
-		<script type='text/javascript' src='http://code.jquery.com/jquery.min.js'></script>
-		<script src='js/bootstrap.min.js'></script> 
-		<style type='text/css'>
-			.jumbotron{
-			margin-top:10px;
+{%block style%}
+		.jumbotron{
+			margin-top:50px;
 			}
-		</style>
-        <link rel='stylesheet' href='{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css' />
-    </head>
-    <body>
-		<form method ='POST'>
+{%endblock%}
+
+{%block content%}
+	<form method ='POST'>
+		<div class='jumbotron'>
 		<div class='input-group'>
-			<span class="input-group-addon">@</span>
+			<span class="input-group-addon">City</span>
 			<input type='text' class='form-control' name='city' placeholder='Singapore'>
 		</div>
 
 		<div class='input-group'>
-			<span class="input-group-addon">@</span>
+			<span class="input-group-addon">Available?</span>
 			<input type='checkbox' class='form-control' name='status'>
 		</div>
 
 		{% csrf_token %}
 		<input type='submit' class='btn btn-primary' name='info' value='Submit'>
 		<input type='submit' class='btn btn-default' name='later' value='Remind Me Later'>
-		</form>
-	</body>
-</html>
+		</div>
+	</form>
+{%endblock%}
+

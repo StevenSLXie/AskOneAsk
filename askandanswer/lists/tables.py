@@ -39,5 +39,5 @@ class AnsTable(tables.Table):
 class UserTable(tables.Table):
     class Meta:
         model = Person 
-        fields = ('get_username','email','city','status')
+        fields = ('name','email','city','status')
         attrs = {'class':'paleblue'}

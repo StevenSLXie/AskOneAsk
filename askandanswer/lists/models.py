@@ -1,19 +1,19 @@
 from django.db import models
 from django.contrib.auth.models import User
+#from django.db.models.signals import post_save
 
 # Create your models here.
 
 class Person(models.Model):
-    username = models.TextField()
-    email = models.TextField()
-    city = models.TextField()
-    status = models.BooleanField()
-    def __init__(self,user=None):
-        if user == None:
-            super(Person,self).__init__()
-        else:
-            self.username = user.username
-            self.email = user.email
+    user = models.OneToOneField(User)
+    city = models.TextField(default='Earth',editable=False)
+    status = models.BooleanField(default=True,editable=False)
+
+    def name(self):
+        return self.user.username
+
+    def email(self):
+        return self.user.email
 
 class Qns(models.Model):
     qns = models.TextField() 

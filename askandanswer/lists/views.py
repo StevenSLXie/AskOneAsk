@@ -4,6 +4,7 @@ from lists.models import Qns,Ans,Person
 from random import randint
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.models import User
 from django_tables2 import RequestConfig
 from lists.tables import QnsTable,AnsTable,UserTable
@@ -24,7 +25,14 @@ def login(request):
     if user is not None:
         if user.is_active:
             auth_login(request,user)
-            return redirect('/')
+            if not request.POST.get('remember_me',None):
+                request.session.set_expiry(0)
+            p = Person.objects.get(user=user)
+            if p.city == 'Earth':
+                return redirect('/more')
+            else:
+                return redirect('/')
+			#return redirect('/more')
         else:
             return redirect('/login')
     else:
@@ -72,21 +80,28 @@ def signup(request):
             return render(request,'signup.html')
 		#if 'i_have_an_account' not in request.POST:	
         User.objects.create_user(request.POST['username'],request.POST['email'],request.POST['password'])
-        return redirect('/more')
+        curUser = User.objects.get(username=request.POST['username'])
+        Person.objects.create(user=curUser)
+        return redirect('/login')
     else:
         return render(request,'signup.html')
 
 def user_info_input(request):
     if request.method == 'POST':
         if request.POST.get('later'):
-            return redirect('/login')
+            return redirect('/')
         else:
-            request.user.city = request.POST['city']
-            if request.POST.get('status',True):
-                request.user.status = True
+			#request.user.city = request.POST['city']
+            if not request.POST.get('status',None):
+                temp_state = True
             else:
-                request.user.status = False
-            return redirect('/login')
+                temp_state = False
+            curPer = Person.objects.get(user=request.user)
+            curPer.city = request.POST['city']
+            curPer.status = temp_state
+            curPer.save()
+			#Person.objects.create(user=request.user,city=request.POST['city'],status=temp_state)
+            return redirect('/')
     else:
 	    return render(request,'user_information_input.html')
         
@@ -104,8 +119,12 @@ def print_answer_by_answerer(request):
 def home(request):
     return render(request,'home.html')
 
-def print_people_detail(request,user):
-    table = UserTable(User.objects.filter(username=user))
+def print_people_detail(request,curUser):
+    table = UserTable(Person.objects.filter(user__username=curUser))
     RequestConfig(request).configure(table)
     return render(request,'user_profile.html',{'table':table})
 	#return redirect('/ask')
+
+def logout(request):
+    auth_logout(request)
+    return redirect('/login')
